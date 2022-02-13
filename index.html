@@ -1,0 +1,269 @@
+
+<div class="container mt-1">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="d-flex justify-content-between align-items-center breaking-news bg-white" style="display: inline-flex !important">
+  <div class="d-flex flex-row flex-grow-1 flex-fill justify-content-center px-1 news" style="width: 20%;display: inline-flex !important">
+    <span class="d-flex align-items-center">
+      <img class="actus-img" src="img_actus_rss.jpg" alt="FalshInfos"/>
+      <b style="position: absolute;"><a class="aa" href="/refproc/Lists/List4Test/AllItems.aspx">&nbsp;Dernières Procédures Signées (30) : </a></b></span>
+    
+  </div>
+  <div
+  class="hwrap"
+  onmouseleave="handleMouseLeft(event)"
+  onmouseup="handleMouseLeft(event)"
+  onmousemove="handleMouseMove(event)"
+>
+  <div class="hmove" id="hmove" onmousedown="handleMouseDown(event)">
+    <p class="hitem">
+      <b class="DateSignature">11/03/2021</b>Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit.
+    </p>
+    <p class="hitem">
+      <b class="DateSignature"><a href="www.google.com">11/03/2021</a> </b>Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit.
+    </p>
+    <p class="hitem">
+      <b class="DateSignature">11/03/2021</b>Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit.
+    </p>
+    <p class="hitem">
+      <b class="DateSignature">11/03/2021</b>Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit.
+    </p>
+    <p class="hitem">
+      <b class="DateSignature">11/03/2021</b>Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit.
+    </p>
+    <p class="hitem">
+      <b class="DateSignature">11/03/2021</b>Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit.
+    </p>
+    <p class="hitem">
+      <b class="DateSignature">11/03/2021</b>Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit.
+    </p>
+    <p class="hitem">
+      <b class="DateSignature">11/03/2021</b>Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit.
+    </p>
+    <p class="hitem">
+      <b class="DateSignature">11/03/2021</b>Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit.
+    </p>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+  * {
+    font-family: Arial;
+  }
+
+  :root {
+    --staring-position: 100%;
+    --ending-position: -100%;
+  }
+
+  body,
+  html {
+    margin: 0px;
+    padding: 0px;
+  }
+  /* (A) FIXED WRAPPER */
+
+  .hwrap {
+    overflow: hidden;
+    /* HIDE SCROLL BAR */
+    background: rgb(255, 255, 255);
+    /*padding: 16px;*/
+    /*position: fixed;*/
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    cursor: grab;
+    width: 80%;
+  }
+  /* (B) MOVING TICKER WRAPPER */
+
+  .hmove {
+    display: flex;
+    
+  }
+  /* (C) ITEMS - INTO A LONG HORIZONTAL ROW */
+
+  .hitem {
+    flex-shrink: 0;
+    width: auto;
+    box-sizing: border-box;
+    padding: 2px;
+    text-align: center;
+    margin: 0px 16px;
+    user-select: none;
+  }
+
+  @keyframes tickerh {
+    0% {
+      transform: translate3d(100%, 0, 0);
+    }
+    100% {
+      transform: translate3d(var(--ending-position), 0, 0);
+    }
+  }
+
+  .DateSignature {
+    color: white;
+    background-color: rgb(245, 130, 31) !important;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin-right: 16px;
+  }
+
+  .hmove {
+    animation: tickerh linear 35s infinite;
+    transition-timing-function: linear;
+  }
+  .aa:hover {
+    text-decoration: underline !important;
+}
+.aa, .ms-link:visited {
+
+    color: rgb(245, 130, 31) !important;
+    text-decoration: none !important;
+}
+/*feuille de style de l’agent utilisateur*/
+.aa:-webkit-any-link {
+    color: -webkit-link;
+    cursor: pointer;
+    text-decoration: underline;
+}
+</style>
+
+<script>
+  // get element from ElementRef
+  const tickerh = document.getElementById("hmove");
+  // set possible mouse states
+  const MOUSE_STATES = {
+    mouseDown: "MOUSE_DOWN",
+    mouseLeft: "MOUSE_LEFT",
+  };
+  // set possible animation states
+  const ANIMATION_STATES = {
+    pause: "paused",
+    run: "running",
+  };
+
+  // duration for one item in seconds
+  const ANIMATION_BY_ITEM = 4;
+
+  // duration for all the items in seconds
+  const ANIMATION_DURATION =
+    document.getElementsByClassName("hitem").length * ANIMATION_BY_ITEM;
+
+  // set animation ending position to the ticker width
+  document.documentElement.style.setProperty(
+    "--ending-position",
+    -1 * tickerh.scrollWidth + "px"
+  );
+
+  // setup initial state
+  let mouseState = MOUSE_STATES.mouseLeft;
+  let mouseDownX = 0;
+  let startPosition = 0;
+  let timeOutIndex = 0;
+
+  // handle mouse down event
+  const handleMouseDown = (e) => {
+    // set mouse state to down state
+    mouseState = MOUSE_STATES.mouseDown;
+
+    // pause the current animation
+    changeAnimationState(tickerh, ANIMATION_STATES.pause);
+
+    // save the mouse click X coordinates
+    mouseDownX = e.pageX;
+
+    // save the ticker current position
+    startPosition = getTickerLastPosition(tickerh);
+
+    // clear the animation interval if exits
+    clearInterval(timeOutIndex);
+
+    // remove unnecessary  styling
+    tickerh.style.transitionDuration = "0ms";
+  };
+
+  // handle mouse move event
+  const handleMouseMove = (e) => {
+    // if the mouse isnt down than skip
+    if (mouseState == MOUSE_STATES.mouseLeft) return;
+
+    // follow the mouse x movements
+    tickerh.style.animation = "none";
+    tickerh.style.transform = `translate3d(${
+      startPosition + e.pageX - mouseDownX
+    }px,0,0)`;
+  };
+
+  // handle mouse leave  event
+  const handleMouseLeft = (e) => {
+    // if the mouse isnt down than skip
+    if (mouseState == MOUSE_STATES.mouseLeft) return;
+
+    // change mouse state to left
+    mouseState = MOUSE_STATES.mouseLeft;
+    const lastPosition = getTickerLastPosition(tickerh);
+
+    // calculate the left time for the animation
+    const duration = animationLeftTiming(
+      tickerh,
+      ANIMATION_DURATION,
+      lastPosition
+    );
+
+    // reset the animation after drag ends
+    setupTickerAnimation(tickerh, duration, ANIMATION_DURATION);
+  };
+
+  const changeAnimationState = (element, state) => {
+    element.style.animationPlayState = state;
+  };
+
+  // calculate the time left for the previous animation
+  const animationLeftTiming = (element, animationDuration, position) => {
+    let duration = 0;
+    if (position > 0) {
+      duration =
+        ((position + element.scrollWidth) * animationDuration) /
+        (element.scrollWidth * 2);
+    } else {
+      duration =
+        ((element.scrollWidth - Math.abs(position)) * animationDuration) /
+        (element.scrollWidth * 2);
+    }
+    return duration;
+  };
+
+  // get ticker current x coordinates
+  const getTickerLastPosition = (element) => {
+    const style = window.getComputedStyle(element);
+    const matrix = new WebKitCSSMatrix(style.webkitTransform);
+    return matrix.m41;
+  };
+
+  // restart the animation after the drag ends
+  const setupTickerAnimation = (element, duration, animationDuration) => {
+    element.style.transitionDuration = `${duration}s`;
+    element.style.transform = `translate3d(-${element.scrollWidth}px,0,0)`;
+    timeOutIndex = setTimeout(() => {
+      element.style.animation = `tickerh linear ${animationDuration}s infinite`;
+      changeAnimationState(element, ANIMATION_STATES.run);
+    }, duration * 1000);
+  };
+</script>
